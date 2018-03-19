@@ -1,9 +1,10 @@
+ 
   var config = {
     apiKey: "AIzaSyAC5PzbpjlxiaapYPbXe4UmXyTkR0P_2fM",
     authDomain: "train-schedule-d0a22.firebaseapp.com",
     databaseURL: "https://train-schedule-d0a22.firebaseio.com",
     projectId: "train-schedule-d0a22",
-    storageBucket: "",
+    storageBucket: "train-schedule-d0a22.appspot.com",
     messagingSenderId: "381520113353"
   };
 
@@ -11,8 +12,9 @@
 
   var database = firebase.database();
  
-  $("#addTrainBtn").on("click", function() {
-    
+  $("#addTrainBtn").on("click", function(event) {
+    event.preventDefault();
+  
     var trainName= $("#exampleInputtrainName").val().trim();
     var destination = $("#exampleInputDestination").val().trim();
     var trainTime = $("#exampleInputtrainTime").val().trim();
@@ -21,11 +23,12 @@
    var newTrain = {
     name: trainName,
     place: destination,
-    trainTime: firstTrainTime,
+    trainTime: trainTime,
     freq: frequency
 
    }
-
+  
+  console.log(newTrain);
    database.ref().push(newTrain);
 
     $("#exampleInputtrainName").val("");
@@ -39,11 +42,10 @@
 
    database.ref().on("child_added", function(childSnapshot) {
 
-    console.log(snapshot.val());
-    console.log(snapshot.val().trainName);
-    console.log(snapshot.val().destination);
-    console.log(snapshot.val().firstTrainTime);
-    console.log(snapshot.val().frequency);
+    console.log(childSnapshot.val().trainName);
+    console.log(childSnapshot.val().destination);
+    console.log(childSnapshot.val().trainTime);
+    console.log(childSnapshot.val().frequency);
 
    
     var trainName = childSnapshot.val().name;
@@ -51,7 +53,7 @@
     var trainTime = childSnapshot.val().trainTime;
     var frequency = childSnapshot.val().freq;
 
-    var firstTimeConverted = moment(firstTrain, "HH:mm");
+    var firstTimeConverted = moment(trainTime, "HH:mm");
 
     var currentTime = moment().format("HH:mm");
   
